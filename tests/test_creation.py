@@ -37,6 +37,31 @@ def helper_parse_circleci_command(
 
 
 @pytest.mark.usefixtures("cookiecutter_setup")
+class TestCircleConfig:
+    def test_circleci_docker_version(self):
+        assert (
+            self.circleci_config.get("jobs").get("build").get("docker")[0].get("image")
+            == self.circleci_docker_python
+        )
+
+    def test_circleci_cookiecutter_parsed_source_dir(self):
+        circleci_steps = self.circleci_config.get("jobs").get("build").get("steps")
+        cmd = helper_parse_circleci_command(circleci_steps, "Pytest")
+        cmd_split = cmd.split("--cov=")[-1]
+        assert cmd_split == self.args.get("module_name")
+
+    def test_circleci_mypy_cmd(self):
+        circleci_steps = self.circleci_config.get("jobs").get("build").get("steps")
+        cmd = helper_parse_circleci_command(circleci_steps, "Type checks")
+        assert cmd == "poetry run mypy --ignore-missing-imports ."
+
+    def test_circleci_black_cmd(self):
+        circleci_steps = self.circleci_config.get("jobs").get("build").get("steps")
+        cmd = helper_parse_circleci_command(circleci_steps, "Check code formatting")
+        assert cmd == "poetry run black --check ."
+
+
+@pytest.mark.usefixtures("cookiecutter_setup")
 class TestCookiecutterTemplate:
     def test_files_present(self):
         assert self.cookiecutter_files == sorted([
@@ -47,9 +72,10 @@ class TestCookiecutterTemplate:
             'LICENSE',
             'Makefile',
             'README.md',
-            'data', 'docs', 'models', 'mypythoncode',
-            'notebooks', 'pyproject.toml',
-            'references', 'reports', 'setup.cfg', 'tests'
+            'mypythoncode',
+            'pyproject.toml',
+            'setup.cfg',
+            'tests'
         ])
 
     def test_pyproject_poetry_env_name(self):
@@ -79,6 +105,9 @@ class TestCookiecutterTemplate:
     def test_tests_is_dir(self):
         assert self.tests_is_dir == True
 
+
+@pytest.mark.usefixtures("cookiecutter_setup")
+class TestPrecommitConfig:
     def test_pre_commit_hooks_repo(self):
         assert (
             self.precommit_config.get("repos")[0].get("repo")
