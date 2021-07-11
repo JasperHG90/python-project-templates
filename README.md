@@ -37,3 +37,21 @@ Set up a new git repository and configure the pre-commit hooks as follows:
 ```shell
 git init && make setup-pre-commit
 ```
+
+### Other templates
+
+Currently, there are two available templates:
+
+1. the [base template](https://github.com/JasperHG90/python-project-templates)
+   
+    ```shell
+    cookiecutter -c base https://github.com/JasperHG90/python-project-templates
+    ```
+
+
+2. the [data science template](https://github.com/JasperHG90/python-project-templates/datascience) that is based on the
+[cookiecutter data science template](https://github.com/drivendata/cookiecutter-data-science)
+
+    ```shell
+    cookiecutter -c datascience https://github.com/JasperHG90/python-project-templates
+    ```
