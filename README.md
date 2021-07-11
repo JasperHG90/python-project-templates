@@ -55,3 +55,17 @@ Currently, there are two available templates:
     ```shell
     cookiecutter -c datascience https://github.com/JasperHG90/python-project-templates
     ```
+   
+## The data science template
+
+The data science template is based on [cookiecutter data science template](https://github.com/drivendata/cookiecutter-data-science)
+and largely retains that project's folder structure (with some changes here and there).
+
+When you create the project, you can also add the s3/storage bucket you use to store data. If you use AWS
+, you can specify which profile you want to use. In the case of GCP, you can pass your project id.
+
+To get started quickly with popular data science packages, execute:
+
+```shell
+make install-ds-libs
+```
