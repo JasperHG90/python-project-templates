@@ -1,5 +1,5 @@
 import pytest
-from {{cookiecutter.srcdirectoryname}}.example import nchar
+from {{cookiecutter.module_name}}.example import nchar
 
 
 def test_nchar_returns_none():
