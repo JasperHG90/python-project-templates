@@ -49,7 +49,7 @@ Currently, there are two available templates:
     ```
 
 
-2. the [data science template](https://github.com/JasperHG90/python-project-templates/datascience) that is based on the
+2. the [data science template](https://github.com/JasperHG90/python-project-templates/tree/datascience) that is based on the
 [cookiecutter data science template](https://github.com/drivendata/cookiecutter-data-science)
 
     ```shell
