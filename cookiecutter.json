@@ -6,5 +6,5 @@
     "author_email": "Your (work) email",
     "description": "A short description of the project",
     "github_url": "none",
-    "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
+    "open_source_license": ["MIT", "BSD-3-Clause", "No license file"]
 }
