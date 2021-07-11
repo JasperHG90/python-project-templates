@@ -25,11 +25,11 @@ clean:
 	find . -type d -name "__pycache__" -delete
 
 ## Lint using flake8
-lint: setup
+lint:
 	poetry run flake8 {{ cookiecutter.module_name }}
 
 ## Run python tests
-test: setup
+test:
 	poetry run pytest $(PROJECT_DIR)
 
 ## Set up pre-commit
