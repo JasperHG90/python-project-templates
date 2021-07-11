@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: update-pip install-dependencies clean lint test setup-pre-commit
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -26,7 +26,7 @@ update-pip:
 	poetry run python -m pip install -U pip
 
 ## Install python dependencies
-setup: update-pip
+install-dependencies: update-pip
 	poetry install
 
 ## Install common DS libraries (pandas, numpy, dask, matplotlib, dask-ml, scipy, jupyter, numba, mlflow)
@@ -43,11 +43,11 @@ clean:
 	find . -type d -name "__pycache__" -delete
 
 ## Lint using flake8
-lint: setup
+lint:
 	poetry run flake8 {{ cookiecutter.module_name }}
 
 ## Run python tests
-test: setup
+test:
 	poetry run pytest $(PROJECT_DIR)
 
 ## Set up pre-commit
