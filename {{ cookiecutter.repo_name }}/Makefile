@@ -30,11 +30,11 @@ install-dependencies: update-pip
 	poetry install
 
 ## Install common DS libraries (pandas, numpy, dask, matplotlib, dask-ml, scipy, jupyter, numba, mlflow)
-install-ds-libs: setup
+install-ds-libs: install-dependencies
 	poetry add pandas numpy scipy matplotlib dask dask-ml jupyter ipykernel numba mlflow
 
 ## Make Dataset
-data: setup
+data:
 	poetry run python {{ cookiecutter.module_name }}/data/make_dataset.py data/raw data/processed
 
 ## Delete all compiled Python files
