@@ -1,0 +1,35 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/project
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
+          {% raw -%}
+          key: deps9-{{ .Branch }}-{{ checksum "poetry.lock" }}
+          {%- endraw %}
+      - run:
+          name: Install dependencies
+          command: |
+            poetry config virtualenvs.in-project true
+            poetry install
+      - save_cache:
+          {% raw -%}
+          key: deps9-{{ .Branch }}-{{ checksum "poetry.lock" }}
+          {%- endraw %}
+          paths:
+            - ".venv"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.8/site-packages"
+      - run:
+          name: Check code formatting
+          command: poetry run black --check .
+      - run:
+          name: Type checks
+          command: poetry run mypy --ignore-missing-imports .
+      - run:
+          name: Pytest
+          command: poetry run pytest -v --cov={{ cookiecutter.module_name }}
