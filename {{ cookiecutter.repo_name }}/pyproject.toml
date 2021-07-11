@@ -13,6 +13,9 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.8,<3.10"
 loguru = "^0.5.3"
+click = "^8.0.1"
+Sphinx = "^4.0.3"
+coverage = "^5.5"
 python-dotenv = "^0.18.0"
 nptyping = "1.4.2"
 

@@ -1,4 +1,4 @@
-.PHONY: update-pip install-dependencies clean lint test setup-pre-commit
+.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -6,6 +6,16 @@
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PROJECT_NAME = {{ cookiecutter.repo_name }}
+{% if cookiecutter.cloud_vendor != 'none' %}
+{% if cookiecutter.cloud_vendor == 'AWS' -%}
+PROFILE = {{ cookiecutter.project_profile_or_id }}
+CLOUD_VENDOR = AWS
+{% elif cookiecutter.cloud_vendor == 'GCP' -%}
+CLOUD_VENDOR = GCP
+PROJECT_ID = {{ cookiecutter.project_profile_or_id }}
+{% endif %}
+DATA_BUCKET = {{ cookiecutter.data_bucket }}
+{% endif %}
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -16,8 +26,16 @@ update-pip:
 	poetry run python -m pip install -U pip
 
 ## Install python dependencies
-install-dependencies: update-pip
+setup: update-pip
 	poetry install
+
+## Install common DS libraries (pandas, numpy, dask, matplotlib, dask-ml, scipy, jupyter, numba, mlflow)
+install-ds-libs: setup
+	poetry add pandas numpy scipy matplotlib dask dask-ml jupyter ipykernel numba mlflow
+
+## Make Dataset
+data: setup
+	poetry run python {{ cookiecutter.module_name }}/data/make_dataset.py data/raw data/processed
 
 ## Delete all compiled Python files
 clean:
@@ -35,6 +53,32 @@ test: setup
 ## Set up pre-commit
 setup-pre-commit:
 	poetry run pre-commit install
+
+{% if cookiecutter.cloud_vendor == 'GCP' -%}
+## Set google project id
+set-gcp-proj-id:
+	gcloud config set project $(PROJECT_ID)
+{% endif %}
+
+{% if cookiecutter.cloud_vendor != 'none' %}
+## Download Data from storage system
+sync_data_down:
+	{% if cookiecutter.cloud_vendor == 'AWS' -%}
+	aws s3 sync s3://$(DATA_BUCKET)/data/\
+		data/ --profile $(PROFILE)
+	{% elif cookiecutter.cloud_vendor == 'GCP' -%}
+	gsutil -m rsync -r gs://$(DATA_BUCKET)/data/ data/
+	{% endif %}
+
+## Upload Data to storage system
+sync_data_up:
+	{% if cookiecutter.cloud_vendor == 'AWS' -%}
+	aws s3 sync s3://$(DATA_BUCKET)/data/ data/\
+		--profile $(PROFILE)
+	{% elif cookiecutter.cloud_vendor == 'GCP' -%}
+	gsutil -m rsync -r data/ gs://$(DATA_BUCKET)/data/
+	{% endif %}
+{% endif %}
 
 #################################################################################
 # PROJECT RULES                                                                 #

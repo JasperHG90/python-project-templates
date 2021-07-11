@@ -72,10 +72,9 @@ class TestCookiecutterTemplate:
             'LICENSE',
             'Makefile',
             'README.md',
-            'mypythoncode',
-            'pyproject.toml',
-            'setup.cfg',
-            'tests'
+            'data', 'docs', 'models', 'mypythoncode',
+            'notebooks', 'pyproject.toml',
+            'references', 'reports', 'setup.cfg', 'tests'
         ])
 
     def test_pyproject_poetry_env_name(self):

@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
-      - restore_cache:
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
           {% raw -%}
           key: deps9-{{ .Branch }}-{{ checksum "poetry.lock" }}
           {%- endraw %}
