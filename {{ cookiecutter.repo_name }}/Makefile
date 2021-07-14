@@ -31,7 +31,7 @@ install-dependencies: update-pip
 
 ## Install common DS libraries (pandas, numpy, dask, matplotlib, dask-ml, scipy, jupyter, numba, mlflow)
 install-ds-libs: install-dependencies
-	poetry add pandas numpy scipy matplotlib dask dask-ml jupyter ipykernel numba mlflow
+	poetry add pandas numpy scipy matplotlib dask dask-ml jupyterlab ipykernel numba mlflow graphviz
 
 ## Make Dataset
 data:
@@ -53,6 +53,10 @@ test:
 ## Set up pre-commit
 setup-pre-commit:
 	poetry run pre-commit install
+
+## Set up ipykernel
+setup-ipykernel:
+	poetry run python -m ipykernel install --user --name {{cookiecutter.repo_name}} --display-name "{{cookiecutter.repo_name}}"
 
 {% if cookiecutter.cloud_vendor == 'GCP' -%}
 ## Set google project id
